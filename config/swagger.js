@@ -14,7 +14,7 @@ const options = {
         description: 'Development server',
       },
       {
-        url: 'https://cse341-code-student.onrender.com',
+        url: 'https://cse341-final-project-lcdf.onrender.com',
         description: 'Production server',
       },
     ],
