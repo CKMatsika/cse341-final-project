@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const passport = require('passport');
 require('express-async-errors');
 require('dotenv').config();
 
@@ -13,6 +14,12 @@ const errorHandler = require('./middleware/errorHandler');
 // Import routes
 const bookRoutes = require('./routes/books');
 const publisherRoutes = require('./routes/publishers');
+const authorRoutes = require('./routes/authors');
+const reviewRoutes = require('./routes/reviews');
+const authRoutes = require('./routes/auth');
+
+// Import auth configuration
+require('./config/auth');
 
 // Import Swagger
 const swaggerUi = require('swagger-ui-express');
@@ -25,6 +32,10 @@ const app = express();
 
 // Security middleware
 app.use(helmet());
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // CORS configuration
 const corsOptions = {
@@ -69,6 +80,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs, {
 // API routes
 app.use('/api/books', bookRoutes);
 app.use('/api/publishers', publisherRoutes);
+app.use('/api/authors', authorRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/auth', authRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {
@@ -79,6 +93,9 @@ app.get('/', (req, res) => {
     endpoints: {
       books: '/api/books',
       publishers: '/api/publishers',
+      authors: '/api/authors',
+      reviews: '/api/reviews',
+      authentication: '/auth',
       documentation: '/api-docs',
       health: '/health'
     }
@@ -108,6 +125,9 @@ const server = app.listen(PORT, () => {
 🏥 Health Check: http://localhost:${PORT}/health
 📚 Books API: http://localhost:${PORT}/api/books
 🏢 Publishers API: http://localhost:${PORT}/api/publishers
+👨‍💻 Authors API: http://localhost:${PORT}/api/authors
+⭐ Reviews API: http://localhost:${PORT}/api/reviews
+🔐 Authentication: http://localhost:${PORT}/auth
   `);
 });
 

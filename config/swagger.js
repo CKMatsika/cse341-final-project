@@ -19,6 +19,28 @@ const options = {
       },
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'JWT Authorization header using the Bearer scheme'
+        },
+        googleAuth: {
+          type: 'oauth2',
+          flows: {
+            authorizationCode: {
+              authorizationUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+              tokenUrl: 'https://oauth2.googleapis.com/token',
+              scopes: {
+                'openid': 'Open ID Connect',
+                'profile': 'Access to user profile',
+                'email': 'Access to user email'
+              }
+            }
+          }
+        }
+      },
       schemas: {
         Book: {
           type: 'object',
@@ -235,6 +257,334 @@ const options = {
               type: 'number',
               minimum: 0,
               description: 'Number of books published'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        Author: {
+          type: 'object',
+          required: ['firstName', 'lastName'],
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'MongoDB ObjectId'
+            },
+            firstName: {
+              type: 'string',
+              maxLength: 50,
+              description: 'Author first name'
+            },
+            lastName: {
+              type: 'string',
+              maxLength: 50,
+              description: 'Author last name'
+            },
+            penName: {
+              type: 'string',
+              maxLength: 100,
+              description: 'Author pen name or pseudonym'
+            },
+            bio: {
+              type: 'string',
+              maxLength: 2000,
+              description: 'Author biography'
+            },
+            birthDate: {
+              type: 'string',
+              format: 'date',
+              description: 'Author birth date'
+            },
+            deathDate: {
+              type: 'string',
+              format: 'date',
+              description: 'Author death date (if applicable)'
+            },
+            nationality: {
+              type: 'string',
+              maxLength: 50,
+              description: 'Author nationality'
+            },
+            website: {
+              type: 'string',
+              format: 'uri',
+              description: 'Author website'
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Author email'
+            },
+            phone: {
+              type: 'string',
+              description: 'Author phone'
+            },
+            profileImage: {
+              type: 'string',
+              format: 'uri',
+              description: 'Author profile image'
+            },
+            genres: {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: [
+                  'Fiction', 'Non-Fiction', 'Mystery', 'Romance', 'Science Fiction',
+                  'Fantasy', 'Biography', 'History', 'Self-Help', 'Poetry',
+                  'Drama', 'Thriller', 'Horror', 'Children', 'Young Adult',
+                  'Philosophy', 'Science', 'Technology', 'Academic', 'Other'
+                ]
+              },
+              description: 'Author literary genres'
+            },
+            languages: {
+              type: 'array',
+              items: {
+                type: 'string',
+                enum: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Other']
+              },
+              description: 'Languages author writes in'
+            },
+            awards: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  name: {
+                    type: 'string',
+                    description: 'Award name'
+                  },
+                  year: {
+                    type: 'number',
+                    minimum: 1000,
+                    maximum: new Date().getFullYear(),
+                    description: 'Award year'
+                  },
+                  description: {
+                    type: 'string',
+                    description: 'Award description'
+                  }
+                }
+              },
+              description: 'Author literary awards'
+            },
+            socialMedia: {
+              type: 'object',
+              properties: {
+                twitter: {
+                  type: 'string',
+                  description: 'Twitter handle'
+                },
+                facebook: {
+                  type: 'string',
+                  description: 'Facebook profile'
+                },
+                instagram: {
+                  type: 'string',
+                  description: 'Instagram handle'
+                },
+                linkedin: {
+                  type: 'string',
+                  description: 'LinkedIn profile'
+                }
+              }
+            },
+            booksPublished: {
+              type: 'number',
+              minimum: 0,
+              description: 'Number of books published'
+            },
+            status: {
+              type: 'string',
+              enum: ['Active', 'Inactive', 'Deceased', 'Retired'],
+              description: 'Author status'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        Review: {
+          type: 'object',
+          required: ['title', 'content', 'rating'],
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'MongoDB ObjectId'
+            },
+            title: {
+              type: 'string',
+              maxLength: 200,
+              description: 'Review title'
+            },
+            content: {
+              type: 'string',
+              maxLength: 5000,
+              description: 'Review content'
+            },
+            rating: {
+              type: 'number',
+              minimum: 1,
+              maximum: 5,
+              description: 'Rating (1-5 stars)'
+            },
+            book: {
+              type: 'string',
+              description: 'Book ObjectId reference'
+            },
+            author: {
+              type: 'string',
+              description: 'Author ObjectId reference'
+            },
+            reviewer: {
+              type: 'string',
+              description: 'User ObjectId reference'
+            },
+            helpful: {
+              type: 'number',
+              minimum: 0,
+              description: 'Number of helpful votes'
+            },
+            status: {
+              type: 'string',
+              enum: ['Published', 'Pending', 'Hidden', 'Flagged'],
+              description: 'Review status'
+            },
+            moderatedBy: {
+              type: 'string',
+              description: 'User ObjectId of moderator'
+            },
+            moderatedAt: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Moderation timestamp'
+            },
+            moderationReason: {
+              type: 'string',
+              maxLength: 500,
+              description: 'Reason for moderation'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        User: {
+          type: 'object',
+          required: ['googleId', 'email', 'name'],
+          properties: {
+            _id: {
+              type: 'string',
+              description: 'MongoDB ObjectId'
+            },
+            googleId: {
+              type: 'string',
+              description: 'Google OAuth ID'
+            },
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'User email'
+            },
+            name: {
+              type: 'string',
+              maxLength: 100,
+              description: 'User display name'
+            },
+            picture: {
+              type: 'string',
+              format: 'uri',
+              description: 'User profile picture'
+            },
+            role: {
+              type: 'string',
+              enum: ['reader', 'author', 'admin'],
+              description: 'User role'
+            },
+            isActive: {
+              type: 'boolean',
+              description: 'Account status'
+            },
+            lastLogin: {
+              type: 'string',
+              format: 'date-time',
+              description: 'Last login timestamp'
+            },
+            preferences: {
+              type: 'object',
+              properties: {
+                theme: {
+                  type: 'string',
+                  enum: ['light', 'dark']
+                },
+                language: {
+                  type: 'string',
+                  enum: ['en', 'es', 'fr', 'de', 'it', 'pt']
+                },
+                notifications: {
+                  type: 'object',
+                  properties: {
+                    email: {
+                      type: 'boolean'
+                    },
+                    push: {
+                      type: 'boolean'
+                    }
+                  }
+                }
+              }
+            },
+            favorites: {
+              type: 'array',
+              items: {
+                type: 'string'
+              },
+              description: 'Favorite book IDs'
+            },
+            readingHistory: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  book: {
+                    type: 'string'
+                  },
+                  status: {
+                    type: 'string',
+                    enum: ['want_to_read', 'currently_reading', 'read']
+                  },
+                  progress: {
+                    type: 'number',
+                    minimum: 0,
+                    maximum: 100
+                  },
+                  startedAt: {
+                    type: 'string',
+                    format: 'date-time'
+                  },
+                  finishedAt: {
+                    type: 'string',
+                    format: 'date-time'
+                  }
+                }
+              },
+              description: 'User reading history'
             },
             createdAt: {
               type: 'string',

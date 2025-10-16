@@ -1,4 +1,4 @@
-const { bookValidation, publisherValidation } = require('../utils/validators');
+const { bookValidation, publisherValidation, authorValidation, reviewValidation } = require('../utils/validators');
 
 // Middleware to validate request body
 const validateBody = (schema) => {
@@ -65,9 +65,13 @@ const validateParams = (paramName, pattern = /^[0-9a-fA-F]{24}$/) => {
 const validateBookCreation = validateBody(bookValidation.create);
 const validateBookUpdate = validateBody(bookValidation.update);
 
-// Specific validation middleware for publishers
-const validatePublisherCreation = validateBody(publisherValidation.create);
-const validatePublisherUpdate = validateBody(publisherValidation.update);
+// Specific validation middleware for authors
+const validateAuthorCreation = validateBody(authorValidation.create);
+const validateAuthorUpdate = validateBody(authorValidation.update);
+
+// Specific validation middleware for reviews
+const validateReviewCreation = validateBody(reviewValidation.create);
+const validateReviewUpdate = validateBody(reviewValidation.update);
 
 module.exports = {
   validateBody,
@@ -75,6 +79,10 @@ module.exports = {
   validateParams,
   validateBookCreation,
   validateBookUpdate,
+  validateAuthorCreation,
+  validateAuthorUpdate,
   validatePublisherCreation,
-  validatePublisherUpdate
+  validatePublisherUpdate,
+  validateReviewCreation,
+  validateReviewUpdate
 };
